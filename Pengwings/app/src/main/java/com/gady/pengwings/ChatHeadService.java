@@ -3,6 +3,7 @@ package com.gady.pengwings;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ public class ChatHeadService extends Service {
     private WindowManager windowManager;
     private ImageView chatHead;
     private WindowManager.LayoutParams params;
+    private Point size;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -30,6 +32,8 @@ public class ChatHeadService extends Service {
         super.onCreate();
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        size = new Point();
+        windowManager.getDefaultDisplay().getSize(size);
 
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.ic_launcher);
@@ -62,6 +66,13 @@ public class ChatHeadService extends Service {
                         initialTouchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_UP:
+//                        int endpoint = (initialX + (int) (event.getRawX() - initialTouchX) > (size.x / 2)) ? size.x : 0;
+//                        int delta = (endpoint > params.x) ? 1 : -1;
+//                        for(int start = params.x; start != endpoint; start += delta) {
+//                            params.x = start;
+//                            params.y = initialY + (int) (event.getRawY() - initialTouchY);
+//                            windowManager.updateViewLayout(chatHead, params);
+//                        }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);

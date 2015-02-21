@@ -9,11 +9,14 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
+    Intent chatHeadService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startService(new Intent(this, ChatHeadService.class));
+        chatHeadService = new Intent(this, ChatHeadService.class);
+        startService(chatHeadService);
     }
 
 
@@ -37,5 +40,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        System.out.println("Back Clicked");
+        stopService(chatHeadService);
     }
 }
