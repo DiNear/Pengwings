@@ -12,7 +12,6 @@
         android:layout_marginTop="60dp"
         android:layout_weight="0.3">
 
-<<<<<<< HEAD
         <ImageView
             android:id="@+id/bigPrivate"
             android:layout_width="match_parent"
@@ -32,7 +31,7 @@
             android:layout_marginTop="75dp"
             android:layout_marginBottom="25dp"
             android:layout_marginRight="5dp" />
-=======
+
         <!--<Button
             android:id="@+id/update"
             android:layout_width="wrap_content"
@@ -47,7 +46,6 @@
             android:text="assign tier"
             android:onClick="assignTier"/>
         -->
->>>>>>> bc1eeb5deddc2a88a90acb0149cd549682cdf86a
 
     </LinearLayout>
 
