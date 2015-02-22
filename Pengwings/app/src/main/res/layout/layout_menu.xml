@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="#ffc0caff"
         android:layout_marginTop="60dp"
-        android:layout_weight="1">
+        android:layout_weight="0.3">
 
     </LinearLayout>
 
@@ -18,7 +18,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.7"
         android:background="#ffa5d6ff">
 
         <LinearLayout
@@ -56,7 +56,7 @@
                 <ProgressBar
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="180dp"
-                    android:layout_height="40dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/appetiteBar"
                     android:max="100"
@@ -113,7 +113,7 @@
                 <ProgressBar
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="180dp"
-                    android:layout_height="40dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/fitnessBar"
                     android:max="100"
@@ -170,7 +170,7 @@
                 <ProgressBar
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="180dp"
-                    android:layout_height="40dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/moodBar"
                     android:max="100"
