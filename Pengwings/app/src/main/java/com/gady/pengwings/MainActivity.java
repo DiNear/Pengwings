@@ -5,16 +5,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.graphics.Movie;
-import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
 
     Intent chatHeadService;
-    TextView textViewInfo;
     GifView gifView;
 
     @Override
@@ -26,19 +21,6 @@ public class MainActivity extends ActionBarActivity {
         startService(chatHeadService);
 
         gifView = (GifView)findViewById(R.id.gifview);
-
-     //remove
-        textViewInfo = (TextView)findViewById(R.id.textinfo);
-
-        String stringInfo = "";
-        stringInfo += "Duration: " + gifView.getMovieDuration() + "\n";
-        stringInfo += "W x H: "
-                + gifView.getMovieWidth() + " x "
-                + gifView.getMovieHeight() + "\n";
-
-        textViewInfo.setText(stringInfo);
-     //end of remove
-
     }
 
     @Override
