@@ -25,21 +25,57 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_weight="1" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.8">
+                android:layout_weight="0.8" >
 
-            </LinearLayout>
+                <Button
+                    android:background="@drawable/button_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/appetite_title"
+                    android:id="@+id/appetiteButton"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    style="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.6"></LinearLayout>
+                android:layout_weight="0.6" >
+
+                <ProgressBar
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/appetiteBar"
+                    android:max="100"
+                    android:progress="50"
+                    android:indeterminate="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:id="@+id/appetiteProgressView"
+                    android:layout_alignLeft="@+id/appetiteBar"
+                    android:layout_alignStart="@+id/appetiteBar"
+                    android:layout_alignRight="@+id/appetiteBar"
+                    android:layout_alignEnd="@+id/appetiteBar"
+                    android:layout_below="@+id/appetiteBar"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -48,17 +84,55 @@
             android:layout_height="fill_parent"
             android:layout_weight="1" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.8" />
+                android:layout_weight="0.8" >
 
-            <LinearLayout
+                <Button
+                    android:background="@drawable/button_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/fitness_title"
+                    android:id="@+id/fitnessButton"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    style="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.6" />
+                android:layout_weight="0.6" >
+
+                <ProgressBar
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/fitnessBar"
+                    android:max="100"
+                    android:progress="50"
+                    android:indeterminate="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:id="@+id/fitnessProgressView"
+                    android:layout_alignLeft="@+id/fitnessBar"
+                    android:layout_alignStart="@+id/fitnessBar"
+                    android:layout_alignRight="@+id/fitnessBar"
+                    android:layout_alignEnd="@+id/fitnessBar"
+                    android:layout_below="@+id/fitnessBar"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -67,17 +141,55 @@
             android:layout_height="fill_parent"
             android:layout_weight="1" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.8" />
+                android:layout_weight="0.8" >
 
-            <LinearLayout
+                <Button
+                    android:background="@drawable/button_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/mood_title"
+                    android:id="@+id/moodButton"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    style="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="0.6" />
+                android:layout_weight="0.6" >
+
+                <ProgressBar
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/moodBar"
+                    android:max="100"
+                    android:progress="50"
+                    android:indeterminate="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center"
+                    android:id="@+id/moodProgressView"
+                    android:layout_alignLeft="@+id/moodBar"
+                    android:layout_alignStart="@+id/moodBar"
+                    android:layout_alignRight="@+id/moodBar"
+                    android:layout_alignEnd="@+id/moodBar"
+                    android:layout_below="@+id/moodBar"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>

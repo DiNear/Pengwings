@@ -1,10 +1,15 @@
 package com.gady.pengwings;
 
 import java.lang.*;
+
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -14,6 +19,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import static android.widget.LinearLayout.*;
 
@@ -33,6 +40,7 @@ public class ChatHeadService extends Service {
     private View menuView;
     private LayoutInflater inflater;
 
+    private Handler mHandler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -169,6 +177,11 @@ public class ChatHeadService extends Service {
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             } else {
                                 // Otherwise open it
+
+                                // Updates progress bar values to appropriate values (from 0 - 100 set by a global variable) - currently uses filler value
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), 35, 100 );
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.fitnessBar), (TextView) menuView.findViewById(R.id.fitnessProgressView), 75, 100 );
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.moodBar), (TextView) menuView.findViewById(R.id.moodProgressView), 95, 100 );
                                 menuOpen = true;
                                 menuView.setVisibility(View.VISIBLE);
 
@@ -197,9 +210,16 @@ public class ChatHeadService extends Service {
         });
     }
 
+    public void updateProgress(final ProgressBar progressBar, TextView textView, final int current, int max) {
+        progressBar.setMax(max);
+        progressBar.setProgress(current);
+        textView.setText(current+"/"+max);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (chatHead != null) windowManager.removeView(chatHead);
     }
+
 }
