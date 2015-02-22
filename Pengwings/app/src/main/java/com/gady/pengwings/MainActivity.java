@@ -10,7 +10,6 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     Intent chatHeadService;
-    GifView gifView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +18,13 @@ public class MainActivity extends ActionBarActivity {
 
         chatHeadService = new Intent(this, ChatHeadService.class);
         startService(chatHeadService);
-
-        gifView = (GifView)findViewById(R.id.gifview);
+        finish();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -43,11 +41,5 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        System.out.println("Back Clicked");
-        stopService(chatHeadService);
     }
 }

@@ -5,21 +5,4 @@
     android:orientation="vertical"
     tools:context="com.example.androidgif.MainActivity" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/penguindance"
-            />
-
-        <com.gady.pengwings.GifView
-            android:id="@+id/gifview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
 </LinearLayout>
