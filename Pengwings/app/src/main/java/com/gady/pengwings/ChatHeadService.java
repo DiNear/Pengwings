@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,9 @@ import static android.widget.LinearLayout.*;
  */
 public class ChatHeadService extends Service {
 
+    //tag for logcat output (e.g. console output)
+    private static final String TAG = FitnessTracker.class.getSimpleName();
+
     private WindowManager windowManager;
     private ImageView chatHead;
     private ImageView removeChatHead;
@@ -32,7 +36,7 @@ public class ChatHeadService extends Service {
     private Point size;
     private View menuView;
     private LayoutInflater inflater;
-
+    private FitnessTracker fitnessTracker = new FitnessTracker();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -202,4 +206,15 @@ public class ChatHeadService extends Service {
         super.onDestroy();
         if (chatHead != null) windowManager.removeView(chatHead);
     }
+
+
+    public void updateTracker(View v) {
+        fitnessTracker.updateDailyStepsArray();
+        Log.d(TAG, "tracker update done in main");
+    }
+    public void assignTier(View v) {
+        int tier = fitnessTracker.assignTier();
+        Log.d(TAG,"tier in main = "+tier);
+    }
+
 }

@@ -12,6 +12,20 @@
         android:layout_marginTop="60dp"
         android:layout_weight="1">
 
+        <Button
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="update tracker"
+            android:onClick="updateTracker"/>
+
+        <Button
+            android:id="@+id/assigntier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="assign tier"
+            android:onClick="assignTier"/>
+
     </LinearLayout>
 
     <LinearLayout

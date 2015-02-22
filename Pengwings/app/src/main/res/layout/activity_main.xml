@@ -5,6 +5,9 @@
     android:orientation="vertical"
     tools:context="com.example.androidgif.MainActivity" >
 
+
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

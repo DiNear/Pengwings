@@ -3,14 +3,19 @@ package com.gady.pengwings;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends ActionBarActivity {
+    //tag for logcat output (e.g. console output)
+    private static final String TAG = FitnessTracker.class.getSimpleName();
 
     Intent chatHeadService;
     GifView gifView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,9 @@ public class MainActivity extends ActionBarActivity {
         startService(chatHeadService);
 
         gifView = (GifView)findViewById(R.id.gifview);
+
+        Log.d(TAG,"onCreate)");
+
     }
 
     @Override
@@ -50,4 +58,7 @@ public class MainActivity extends ActionBarActivity {
         System.out.println("Back Clicked");
         stopService(chatHeadService);
     }
+
+
+
 }
