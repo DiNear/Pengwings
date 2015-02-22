@@ -16,9 +16,11 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 
@@ -38,11 +40,16 @@ public class ChatHeadService extends Service {
     private WindowManager.LayoutParams removeChatHeadParams;
     private WindowManager.LayoutParams menuParams;
     private WindowManager.LayoutParams messageParams;
+    private WindowManager.LayoutParams buttonParams;
     private Point size;
     private View menuView;
+    private View appetiteView;
+    private Button appetiteButton;
+    private Button appetiteOkButton;
     private LayoutInflater inflater;
     private FitnessTracker fitnessTracker = new FitnessTracker();
     private String history;
+    private int appetiteLevel = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -57,6 +64,8 @@ public class ChatHeadService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
+
+
 
         // Add the view for the menu
         inflater = LayoutInflater.from(this);
@@ -90,6 +99,33 @@ public class ChatHeadService extends Service {
         removeChatHeadParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         removeChatHeadParams.x = 0;
         removeChatHeadParams.y = 45;
+
+        // Add view for appetite tracking
+        appetiteView = inflater.inflate(R.layout.appetite_tracker, null);
+
+        buttonParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        appetiteButton = (Button) menuView.findViewById(R.id.appetiteButton);
+        appetiteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
+                windowManager.addView(appetiteView, buttonParams);
+            }
+        });
+
+        appetiteOkButton = (Button) appetiteView.findViewById(R.id.appetiteOkButton);
+        appetiteOkButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                appetiteLevel +=(int)((RatingBar)appetiteView.findViewById(R.id.foodBar)).getRating();
+                windowManager.removeView(appetiteView);
+                updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), appetiteLevel, 100 );
+            }
+        });
+
 
         windowManager.addView(removeChatHead, removeChatHeadParams);
 
@@ -205,7 +241,7 @@ public class ChatHeadService extends Service {
                                 // Otherwise open it
 
                                 // Updates progress bar values to appropriate values (from 0 - 100 set by a global variable) - currently uses filler value
-                                updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), 35, 100 );
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), appetiteLevel, 100 );
                                 updateProgress((ProgressBar) menuView.findViewById(R.id.fitnessBar), (TextView) menuView.findViewById(R.id.fitnessProgressView), 75, 100 );
                                 updateProgress((ProgressBar) menuView.findViewById(R.id.moodBar), (TextView) menuView.findViewById(R.id.moodProgressView), 95, 100 );
                                 menuOpen = true;
