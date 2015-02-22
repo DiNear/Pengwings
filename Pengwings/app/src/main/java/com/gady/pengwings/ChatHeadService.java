@@ -3,13 +3,13 @@ package com.gady.pengwings;
 import java.lang.*;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
@@ -52,15 +52,11 @@ public class ChatHeadService extends Service {
         menuView.setVisibility(View.GONE);
 
         menuParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-
-        menuParams.gravity = Gravity.TOP | Gravity.LEFT;
-        menuParams.x = 0;
-        menuParams.y = 200;
 
         windowManager.addView(menuView, menuParams);
 
@@ -98,11 +94,16 @@ public class ChatHeadService extends Service {
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
+
         chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
-        chatHeadParams.x = 0;
-        chatHeadParams.y = 100;
+        chatHeadParams.x = 10;
+        chatHeadParams.y = 10;
+
+
+
 
         windowManager.addView(chatHead, chatHeadParams);
+
 
         // Add the touch listener for the service
         chatHead.setOnTouchListener(new View.OnTouchListener() {
@@ -141,8 +142,8 @@ public class ChatHeadService extends Service {
                         } else {    // Otherwise
                             // If the menu was open, restore it
                             if(menuOpen) {
-                                chatHeadParams.x = 0;
-                                chatHeadParams.y = 0;
+                                chatHeadParams.x = 10;
+                                chatHeadParams.y = 10;
 
                                 menuView.setVisibility(View.VISIBLE);
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
@@ -177,8 +178,8 @@ public class ChatHeadService extends Service {
                                 savedX = initialX;
                                 savedY = initialY;
 
-                                chatHeadParams.x = 0;
-                                chatHeadParams.y = 0;
+                                chatHeadParams.x = 10;
+                                chatHeadParams.y = 10;
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             }
                         }
@@ -208,7 +209,7 @@ public class ChatHeadService extends Service {
         } else {
             message.setX(size.x - message.getWidth() - chatHead.getWidth());
         }
-        
+
     }
 
     @Override

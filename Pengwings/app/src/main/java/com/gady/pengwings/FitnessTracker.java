@@ -55,23 +55,25 @@ public class FitnessTracker {
         // else - last update was not today (e.g. yesterday, day before that), then
             // - subif - all elements have been filled, shift all array elements by one
             // and update last element (at end of array) to today's step count
-            // - subelse - find last element used and update it
+            // - subelse - find last element used and update step count
         if (md.format(dailyArrayUpdate).equals(md.format(d1))){
             recordSteps(stepsArray);
         }
         else {
+            recordedToday = false;
             if (stepsArray[stepsArray.length-1] != -1) { // all elements used
                 // shift all array elements by one element toward i=0 (i=0 is erased)
                 for (int i = 0; i < stepsArray.length; i++) {
                     if (i != (stepsArray.length - 1)) {
-                        stepsArray[i] = stepsArray[i + 1];
+                        stepsArray[i] = stepsArray[i+1];
                     } else { // at last element of array
                         stepsArray[i] = -1;
                     }
                 }
+                recordSteps(stepsArray);
             }
             else { // not all elements used
-
+                recordSteps(stepsArray);
             }
         }
     }
@@ -82,11 +84,12 @@ public class FitnessTracker {
         int i = findLatestStepData(stepsArray);
 
         // place current step data in array
-        if (recordedToday) //if data entered today, then record in latest element
+        if (recordedToday) //if data has already been entered today, then record in last element used
             stepsArray[i] = Sensor.TYPE_STEP_COUNTER;
-        else // if not, enter in newest element
+        else // if not recorded yet today, enter in newest element
             stepsArray[i+1] = Sensor.TYPE_STEP_COUNTER;
 
+        recordedToday = true;
     }
 
     // assign a tier to the average steps (Fitness score) based on rolling 2-day average
