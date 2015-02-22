@@ -1,14 +1,15 @@
 package com.gady.pengwings;
 
 import java.lang.*;
+import java.util.Date;
 
-import android.app.ProgressDialog;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.Handler;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -36,7 +37,7 @@ public class ChatHeadService extends Service {
     private Point size;
     private View menuView;
     private LayoutInflater inflater;
-    private Handler mHandler = new Handler();
+    private String history;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -123,7 +124,7 @@ public class ChatHeadService extends Service {
         messageParams.y = chatHeadParams.y;
 
         windowManager.addView(message, messageParams);
-
+        renderMessage("Hello Friend! :)");
 
         // Add the touch listener for the service
         chatHead.setOnTouchListener(new View.OnTouchListener() {
@@ -243,6 +244,9 @@ public class ChatHeadService extends Service {
     }
 
     public void renderMessage(final String msg) {
+        history += new Date().toString() + " - " + msg + "\n";
+        message.setVisibility(View.VISIBLE);
+        message.setAlpha(1.0f);
         message.setText(msg);
         message.setMaxWidth((int)(size.x - chatHead.getX()));
         if(chatHeadParams.x <= size.x/2) {
@@ -250,11 +254,23 @@ public class ChatHeadService extends Service {
         } else {
             messageParams.gravity = Gravity.TOP | Gravity.RIGHT;
         }
-        message.setVisibility(View.VISIBLE);
+        message.setTextSize(18);
+        message.setPadding(5, 5, 5, 5);
+        message.setBackgroundColor(Color.parseColor("#2E72E8"));
 
-        messageParams.x = chatHead.getWidth();
+        messageParams.x = 150;  // ChatHead.getWidth()
         messageParams.y = chatHeadParams.y;
         windowManager.updateViewLayout(message, messageParams);
+        message.animate()
+                .alpha(0f)
+                .setDuration(1200)
+                .setStartDelay(3000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        message.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override
