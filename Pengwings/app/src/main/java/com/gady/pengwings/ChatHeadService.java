@@ -13,6 +13,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.view.LayoutInflater;
+
 
 /**
  * Created by Andy on 2015-02-21.
@@ -24,7 +26,11 @@ public class ChatHeadService extends Service {
     private ImageView removeChatHead;
     private WindowManager.LayoutParams chatHeadParams;
     private WindowManager.LayoutParams removeChatHeadParams;
+    private WindowManager.LayoutParams menuParams;
     private Point size;
+    private View menuView;
+    private LayoutInflater inflater;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -40,8 +46,12 @@ public class ChatHeadService extends Service {
         size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
 
+
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.ic_launcher);
+
+        inflater = LayoutInflater.from(this);
+        menuView = inflater.inflate(R.layout.layout_menu, null);
 
         chatHeadParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -49,7 +59,6 @@ public class ChatHeadService extends Service {
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-
         chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
         chatHeadParams.x = 0;
         chatHeadParams.y = 100;
@@ -73,11 +82,27 @@ public class ChatHeadService extends Service {
 
         windowManager.addView(removeChatHead, removeChatHeadParams);
 
+        menuParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        menuParams.gravity = Gravity.TOP | Gravity.LEFT;
+        menuParams.x = 0;
+        menuParams.y = 200;
+
+
+
         chatHead.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
+            private float savedX;
+            private float savedY;
+            private boolean menuOpen = false;
 
             @Override public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -106,17 +131,41 @@ public class ChatHeadService extends Service {
                             windowManager.updateViewLayout(chatHead, chatHeadParams);
                         }
                         removeChatHead.setVisibility(View.GONE);
+
+                        if(event.getRawX() == initialTouchX && event.getRawY() == initialTouchY){
+                            if(menuOpen){
+                                menuOpen = false;
+                                windowManager.removeView(menuView);
+                                params.x = (int)savedX;
+                                params.y = (int)savedY;
+                                windowManager.updateViewLayout(chatHead, params);
+                            }
+                            else{
+                                menuOpen = true;
+                                windowManager.addView(menuView, menuParams);
+
+                                savedX = initialX;
+                                savedY = initialY;
+
+                                params.x = 0;
+                                params.y = 0;
+                                windowManager.updateViewLayout(chatHead, params);
+                                chatHead.bringToFront();
+                            }
+                        }
+
                         return true;
                     case MotionEvent.ACTION_MOVE:
+                        if(!menuOpen) {
                         chatHeadParams.x = initialX + (int) (event.getRawX() - initialTouchX);
                         chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
                         windowManager.updateViewLayout(chatHead, chatHeadParams);
+                        }
                         return true;
                 }
                 return false;
             }
         });
-
     }
 
     @Override
