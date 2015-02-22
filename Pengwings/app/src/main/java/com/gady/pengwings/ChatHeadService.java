@@ -9,6 +9,9 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 
 /**
@@ -18,7 +21,9 @@ public class ChatHeadService extends Service {
 
     private WindowManager windowManager;
     private ImageView chatHead;
-    private WindowManager.LayoutParams params;
+    private ImageView removeChatHead;
+    private WindowManager.LayoutParams chatHeadParams;
+    private WindowManager.LayoutParams removeChatHeadParams;
     private Point size;
 
     @Override
@@ -38,18 +43,35 @@ public class ChatHeadService extends Service {
         chatHead = new ImageView(this);
         chatHead.setImageResource(R.drawable.ic_launcher);
 
-        params = new WindowManager.LayoutParams(
+        chatHeadParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
-        params.gravity = Gravity.TOP | Gravity.LEFT;
-        params.x = 0;
-        params.y = 100;
+        chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
+        chatHeadParams.x = 0;
+        chatHeadParams.y = 100;
 
-        windowManager.addView(chatHead, params);
+        windowManager.addView(chatHead, chatHeadParams);
+
+        removeChatHead = new ImageView(this);
+        removeChatHead.setImageResource(R.drawable.ic_launcher);
+        removeChatHead.setVisibility(View.GONE);
+
+        removeChatHeadParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        removeChatHeadParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        removeChatHeadParams.x = 0;
+        removeChatHeadParams.y = 75;
+
+        windowManager.addView(removeChatHead, removeChatHeadParams);
 
         chatHead.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
@@ -60,24 +82,35 @@ public class ChatHeadService extends Service {
             @Override public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        initialX = params.x;
-                        initialY = params.y;
+                        removeChatHead.setVisibility(View.VISIBLE);
+                        initialX = chatHeadParams.x;
+                        initialY = chatHeadParams.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_UP:
-//                        int endpoint = (initialX + (int) (event.getRawX() - initialTouchX) > (size.x / 2)) ? size.x : 0;
-//                        int delta = (endpoint > params.x) ? 1 : -1;
-//                        for(int start = params.x; start != endpoint; start += delta) {
-//                            params.x = start;
-//                            params.y = initialY + (int) (event.getRawY() - initialTouchY);
-//                            windowManager.updateViewLayout(chatHead, params);
-//                        }
+                        int[] loc = new int[2];
+                        removeChatHead.getLocationOnScreen(loc);
+                        if((chatHeadParams.y <= loc[1]) && (chatHeadParams.y >= loc[1] - chatHead.getHeight())) {
+                            if((chatHeadParams.x + chatHead.getWidth()/2 >= loc[0]) && (chatHeadParams.x + chatHead.getWidth()/2 <= removeChatHead.getWidth() + loc[0])) {
+                                chatHead.setVisibility(View.GONE);
+                                stopSelf();
+                            }
+                        } else {
+                            if(chatHeadParams.x <= size.x/2) {
+                                chatHeadParams.x = 0;
+                            } else {
+                                chatHeadParams.x = size.x;
+                            }
+                            chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                            windowManager.updateViewLayout(chatHead, chatHeadParams);
+                        }
+                        removeChatHead.setVisibility(View.GONE);
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
-                        windowManager.updateViewLayout(chatHead, params);
+                        chatHeadParams.x = initialX + (int) (event.getRawX() - initialTouchX);
+                        chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        windowManager.updateViewLayout(chatHead, chatHeadParams);
                         return true;
                 }
                 return false;
@@ -91,5 +124,4 @@ public class ChatHeadService extends Service {
         super.onDestroy();
         if (chatHead != null) windowManager.removeView(chatHead);
     }
-
 }
