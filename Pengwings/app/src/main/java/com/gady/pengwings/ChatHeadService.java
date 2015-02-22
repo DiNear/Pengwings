@@ -8,12 +8,16 @@ import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+
+import static android.widget.LinearLayout.*;
 
 
 /**
@@ -60,8 +64,8 @@ public class ChatHeadService extends Service {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
-        chatHeadParams.x = 0;
-        chatHeadParams.y = 100;
+        chatHeadParams.x = 10;
+        chatHeadParams.y = 10;
 
         windowManager.addView(chatHead, chatHeadParams);
 
@@ -83,8 +87,8 @@ public class ChatHeadService extends Service {
         windowManager.addView(removeChatHead, removeChatHeadParams);
 
         menuParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -92,6 +96,8 @@ public class ChatHeadService extends Service {
         menuParams.gravity = Gravity.TOP | Gravity.LEFT;
         menuParams.x = 0;
         menuParams.y = 200;
+
+
 
 
 
@@ -147,8 +153,8 @@ public class ChatHeadService extends Service {
                                 savedX = initialX;
                                 savedY = initialY;
 
-                                chatHeadParams.x = 0;
-                                chatHeadParams.y = 0;
+                                chatHeadParams.x = 10;
+                                chatHeadParams.y = 10;
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                                 chatHead.bringToFront();
                             }
