@@ -8,17 +8,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,14 +28,15 @@ public class ChatHeadService extends Service {
     private WindowManager windowManager;
     private ImageView chatHead;
     private ImageView removeChatHead;
+    private TextView message;
     private WindowManager.LayoutParams chatHeadParams;
     private WindowManager.LayoutParams removeChatHeadParams;
     private WindowManager.LayoutParams menuParams;
+    private WindowManager.LayoutParams messageParams;
     private Point size;
     private View menuView;
     private LayoutInflater inflater;
     private Handler mHandler = new Handler();
-    private TextView message;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,7 +68,7 @@ public class ChatHeadService extends Service {
 
         // Add the view for the thing that removes the chat head
         removeChatHead = new ImageView(this);
-        removeChatHead.setImageResource(R.drawable.igloo);
+        removeChatHead.setImageResource(R.drawable.iglooicon);
         removeChatHead.setAdjustViewBounds(true);
         removeChatHead.setMaxWidth(150);
         removeChatHead.setMaxHeight(150);
@@ -85,13 +83,13 @@ public class ChatHeadService extends Service {
 
         removeChatHeadParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         removeChatHeadParams.x = 0;
-        removeChatHeadParams.y = 75;
+        removeChatHeadParams.y = 45;
 
         windowManager.addView(removeChatHead, removeChatHeadParams);
 
         // Add the view for the chat head
         chatHead = new ImageView(this);
-        chatHead.setImageResource(R.drawable.private1);
+        chatHead.setImageResource(R.drawable.private_left);
         chatHead.setAdjustViewBounds(true);
         chatHead.setMaxWidth(150);
         chatHead.setMaxHeight(150);
@@ -104,10 +102,27 @@ public class ChatHeadService extends Service {
                 PixelFormat.TRANSLUCENT);
 
         chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
-        chatHeadParams.x = 10;
+        chatHeadParams.x = 0;
         chatHeadParams.y = 10;
 
         windowManager.addView(chatHead, chatHeadParams);
+
+        // Add the message box for the chat head
+        message = new TextView(this);
+        message.setVisibility(View.GONE);
+
+        messageParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        messageParams.gravity = Gravity.TOP | Gravity.LEFT;
+        messageParams.x = chatHead.getWidth();
+        messageParams.y = chatHeadParams.y;
+
+        windowManager.addView(message, messageParams);
 
 
         // Add the touch listener for the service
@@ -134,6 +149,9 @@ public class ChatHeadService extends Service {
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
 
+                        // This is just a test
+                        renderMessage("HELLO :)");
+
                         return true;
                     case MotionEvent.ACTION_UP:
                         int[] loc = new int[2];
@@ -147,7 +165,7 @@ public class ChatHeadService extends Service {
                         } else {    // Otherwise
                             // If the menu was open, restore it
                             if(menuOpen) {
-                                chatHeadParams.x = 10;
+                                chatHeadParams.x = 0;
                                 chatHeadParams.y = 10;
 
                                 menuView.setVisibility(View.VISIBLE);
@@ -155,8 +173,10 @@ public class ChatHeadService extends Service {
                             } else {    // Otherwise snap the chat head to the appropriate side of the screen
                                 if(chatHeadParams.x <= size.x/2) {
                                     chatHeadParams.x = 0;
+                                    chatHead.setImageResource(R.drawable.private_left);
                                 } else {
                                     chatHeadParams.x = size.x;
+                                    chatHead.setImageResource(R.drawable.private_right);
                                 }
 
                                 chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
@@ -188,20 +208,26 @@ public class ChatHeadService extends Service {
                                 savedX = initialX;
                                 savedY = initialY;
 
-                                chatHeadParams.x = 10;
+                                chatHeadParams.x = 0;
                                 chatHeadParams.y = 10;
+                                chatHead.setImageResource(R.drawable.private_left);
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             }
                         }
 
+                        // This is just a test
+                        renderMessage("GOOD BYE");
                         return true;
                     case MotionEvent.ACTION_MOVE:
+                        // This is just a test
+                        renderMessage("WHOAAAAAAAAAAAAAAAAAAAAAAA");
+
                         if(menuOpen) {
                             menuView.setVisibility(View.GONE);
                         }
 
-                        chatHeadParams.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        chatHeadParams.x = initialX + (int) (event.getRawX() - (initialTouchX + chatHead.getWidth()/2));
+                        chatHeadParams.y = initialY + (int) (event.getRawY() - (initialTouchY - chatHead.getHeight()/4));
                         windowManager.updateViewLayout(chatHead, chatHeadParams);
                         return true;
                 }
@@ -217,15 +243,18 @@ public class ChatHeadService extends Service {
     }
 
     public void renderMessage(final String msg) {
-        message = new TextView(this);
         message.setText(msg);
         message.setMaxWidth((int)(size.x - chatHead.getX()));
-        if(chatHeadParams.x == 0) {
-            message.setX(chatHead.getWidth());
+        if(chatHeadParams.x <= size.x/2) {
+            messageParams.gravity = Gravity.TOP | Gravity.LEFT;
         } else {
-            message.setX(size.x - message.getWidth() - chatHead.getWidth());
+            messageParams.gravity = Gravity.TOP | Gravity.RIGHT;
         }
+        message.setVisibility(View.VISIBLE);
 
+        messageParams.x = chatHead.getWidth();
+        messageParams.y = chatHeadParams.y;
+        windowManager.updateViewLayout(message, messageParams);
     }
 
     @Override
