@@ -15,15 +15,17 @@
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ratingBar"
+        android:id="@+id/foodBar"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:numStars="5"
+        android:rating="0" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Omnom!"
         android:id="@+id/appetiteOkButton"
-        android:layout_below="@+id/ratingBar"
+        android:layout_below="@+id/foodBar"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
