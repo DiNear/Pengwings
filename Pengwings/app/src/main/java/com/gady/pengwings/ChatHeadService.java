@@ -3,6 +3,7 @@ package com.gady.pengwings;
 import java.lang.*;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 
 /**
@@ -28,7 +30,7 @@ public class ChatHeadService extends Service {
     private Point size;
     private View menuView;
     private LayoutInflater inflater;
-
+    private TextView message;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -64,7 +66,10 @@ public class ChatHeadService extends Service {
 
         // Add the view for the thing that removes the chat head
         removeChatHead = new ImageView(this);
-        removeChatHead.setImageResource(R.drawable.ic_launcher);
+        removeChatHead.setImageResource(R.drawable.igloo);
+        removeChatHead.setAdjustViewBounds(true);
+        removeChatHead.setMaxWidth(150);
+        removeChatHead.setMaxHeight(150);
         removeChatHead.setVisibility(View.GONE);
 
         removeChatHeadParams = new WindowManager.LayoutParams(
@@ -82,7 +87,10 @@ public class ChatHeadService extends Service {
 
         // Add the view for the chat head
         chatHead = new ImageView(this);
-        chatHead.setImageResource(R.drawable.ic_launcher);
+        chatHead.setImageResource(R.drawable.private1);
+        chatHead.setAdjustViewBounds(true);
+        chatHead.setMaxWidth(150);
+        chatHead.setMaxHeight(150);
 
         chatHeadParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -126,11 +134,10 @@ public class ChatHeadService extends Service {
                         removeChatHead.getLocationOnScreen(loc);
 
                         // If the chat head is close to the 'igloo' then remove the chat head
-                        if((chatHeadParams.y <= loc[1]) && (chatHeadParams.y >= loc[1] - chatHead.getHeight())) {
-                            if((chatHeadParams.x + chatHead.getWidth()/2 >= loc[0]) && (chatHeadParams.x + chatHead.getWidth()/2 <= removeChatHead.getWidth() + loc[0])) {
-                                chatHead.setVisibility(View.GONE);
-                                stopSelf();
-                            }
+                        if(((chatHeadParams.y <= loc[1]) && (chatHeadParams.y >= loc[1] - chatHead.getHeight())) &&
+                                ((chatHeadParams.x + chatHead.getWidth()/2 >= loc[0]) && (chatHeadParams.x + chatHead.getWidth()/2 <= removeChatHead.getWidth() + loc[0]))) {
+                            chatHead.setVisibility(View.GONE);
+                            stopSelf();
                         } else {    // Otherwise
                             // If the menu was open, restore it
                             if(menuOpen) {
@@ -190,6 +197,18 @@ public class ChatHeadService extends Service {
                 return false;
             }
         });
+    }
+
+    public void renderMessage(final String msg) {
+        message = new TextView(this);
+        message.setText(msg);
+        message.setMaxWidth((int)(size.x - chatHead.getX()));
+        if(chatHeadParams.x == 0) {
+            message.setX(chatHead.getWidth());
+        } else {
+            message.setX(size.x - message.getWidth() - chatHead.getWidth());
+        }
+        
     }
 
     @Override
