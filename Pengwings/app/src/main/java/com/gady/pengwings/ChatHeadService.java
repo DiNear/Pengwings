@@ -136,9 +136,9 @@ public class ChatHeadService extends Service {
                             if(menuOpen){
                                 menuOpen = false;
                                 windowManager.removeView(menuView);
-                                params.x = (int)savedX;
-                                params.y = (int)savedY;
-                                windowManager.updateViewLayout(chatHead, params);
+                                chatHeadParams.x = (int)savedX;
+                                chatHeadParams.y = (int)savedY;
+                                windowManager.updateViewLayout(chatHead, chatHeadParams);
                             }
                             else{
                                 menuOpen = true;
@@ -147,9 +147,9 @@ public class ChatHeadService extends Service {
                                 savedX = initialX;
                                 savedY = initialY;
 
-                                params.x = 0;
-                                params.y = 0;
-                                windowManager.updateViewLayout(chatHead, params);
+                                chatHeadParams.x = 0;
+                                chatHeadParams.y = 0;
+                                windowManager.updateViewLayout(chatHead, chatHeadParams);
                                 chatHead.bringToFront();
                             }
                         }
