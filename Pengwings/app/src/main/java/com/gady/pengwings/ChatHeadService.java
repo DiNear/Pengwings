@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.graphics.Movie;
 
 
 /**
@@ -39,6 +40,8 @@ public class ChatHeadService extends Service {
     private LayoutInflater inflater;
     private String history;
 
+    private TextView penguinText;
+
     @Override
     public IBinder onBind(Intent intent) {
         // Not used
@@ -52,6 +55,7 @@ public class ChatHeadService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         size = new Point();
         windowManager.getDefaultDisplay().getSize(size);
+        history = "";
 
         // Add the view for the menu
         inflater = LayoutInflater.from(this);
@@ -66,6 +70,8 @@ public class ChatHeadService extends Service {
                 PixelFormat.TRANSLUCENT);
 
         windowManager.addView(menuView, menuParams);
+
+        penguinText = (TextView) menuView.findViewById(R.id.penguinText);
 
         // Add the view for the thing that removes the chat head
         removeChatHead = new ImageView(this);
@@ -84,7 +90,7 @@ public class ChatHeadService extends Service {
 
         removeChatHeadParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         removeChatHeadParams.x = 0;
-        removeChatHeadParams.y = 45;
+        removeChatHeadParams.y = 25;
 
         windowManager.addView(removeChatHead, removeChatHeadParams);
 
@@ -150,8 +156,7 @@ public class ChatHeadService extends Service {
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
 
-                        // This is just a test
-                        renderMessage("HELLO :)");
+                        renderMessage("Tee hee");
 
                         return true;
                     case MotionEvent.ACTION_UP:
@@ -161,6 +166,7 @@ public class ChatHeadService extends Service {
                         // If the chat head is close to the 'igloo' then remove the chat head
                         if(((chatHeadParams.y <= loc[1]) && (chatHeadParams.y >= loc[1] - chatHead.getHeight())) &&
                                 ((chatHeadParams.x + chatHead.getWidth()/2 >= loc[0]) && (chatHeadParams.x + chatHead.getWidth()/2 <= removeChatHead.getWidth() + loc[0]))) {
+                            renderMessage("Goodbye!");
                             chatHead.setVisibility(View.GONE);
                             stopSelf();
                         } else {    // Otherwise
@@ -215,14 +221,8 @@ public class ChatHeadService extends Service {
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             }
                         }
-
-                        // This is just a test
-                        renderMessage("GOOD BYE");
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        // This is just a test
-                        renderMessage("WHOAAAAAAAAAAAAAAAAAAAAAAA");
-
                         if(menuOpen) {
                             menuView.setVisibility(View.GONE);
                         }
@@ -244,7 +244,8 @@ public class ChatHeadService extends Service {
     }
 
     public void renderMessage(final String msg) {
-        history += new Date().toString() + " - " + msg + "\n";
+        history += msg + "\n";
+        penguinText.setText(history);
         message.setVisibility(View.VISIBLE);
         message.setAlpha(1.0f);
         message.setText(msg);
