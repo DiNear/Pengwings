@@ -129,8 +129,10 @@ public class ChatHeadService extends Service {
                 appetiteLevel +=(int)((RatingBar)appetiteView.findViewById(R.id.foodBar)).getRating();
                 windowManager.removeView(appetiteView);
                 updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), appetiteLevel, 100 );
+                renderMessage("Omnomnom");
             }
         });
+
 
 
         windowManager.addView(removeChatHead, removeChatHeadParams);
