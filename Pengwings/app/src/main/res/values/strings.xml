@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">Pengwings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="appetite_title">Appetite</string>
+    <string name="fitness_title">Fitness</string>
+    <string name="mood_title">Mood</string>
     <string name="action_settings">Settings</string>
 
 </resources>

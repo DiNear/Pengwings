@@ -1,10 +1,15 @@
 package com.gady.pengwings;
 
 import java.lang.*;
+
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -13,6 +18,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -30,6 +37,7 @@ public class ChatHeadService extends Service {
     private Point size;
     private View menuView;
     private LayoutInflater inflater;
+    private Handler mHandler = new Handler();
     private TextView message;
 
     @Override
@@ -98,9 +106,6 @@ public class ChatHeadService extends Service {
         chatHeadParams.gravity = Gravity.TOP | Gravity.LEFT;
         chatHeadParams.x = 10;
         chatHeadParams.y = 10;
-
-
-
 
         windowManager.addView(chatHead, chatHeadParams);
 
@@ -172,6 +177,11 @@ public class ChatHeadService extends Service {
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             } else {
                                 // Otherwise open it
+
+                                // Updates progress bar values to appropriate values (from 0 - 100 set by a global variable) - currently uses filler value
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.appetiteBar), (TextView) menuView.findViewById(R.id.appetiteProgressView), 35, 100 );
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.fitnessBar), (TextView) menuView.findViewById(R.id.fitnessProgressView), 75, 100 );
+                                updateProgress((ProgressBar) menuView.findViewById(R.id.moodBar), (TextView) menuView.findViewById(R.id.moodProgressView), 95, 100 );
                                 menuOpen = true;
                                 menuView.setVisibility(View.VISIBLE);
 
@@ -200,6 +210,12 @@ public class ChatHeadService extends Service {
         });
     }
 
+    public void updateProgress(final ProgressBar progressBar, TextView textView, final int current, int max) {
+        progressBar.setMax(max);
+        progressBar.setProgress(current);
+        textView.setText(current + "/" + max);
+    }
+
     public void renderMessage(final String msg) {
         message = new TextView(this);
         message.setText(msg);
@@ -217,4 +233,5 @@ public class ChatHeadService extends Service {
         super.onDestroy();
         if (chatHead != null) windowManager.removeView(chatHead);
     }
+
 }
