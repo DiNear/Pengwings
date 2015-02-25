@@ -160,6 +160,9 @@ public class ChatHeadService extends Service {
         // Add the message box for the chat head
         message = new TextView(this);
         message.setVisibility(View.GONE);
+        message.setTextSize(18);
+        message.setPadding(5, 5, 5, 5);
+        message.setBackgroundColor(Color.parseColor("#2E72E8"));
 
         messageParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -203,6 +206,17 @@ public class ChatHeadService extends Service {
 
                         return true;
                     case MotionEvent.ACTION_UP:
+                        message.animate()
+                            .alpha(0f)
+                            .setDuration(1200)
+                            .setStartDelay(3000)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    message.setVisibility(View.GONE);
+                                }
+                            });
+
                         int[] loc = new int[2];
                         removeChatHead.getLocationOnScreen(loc);
 
@@ -232,6 +246,10 @@ public class ChatHeadService extends Service {
                                 chatHeadParams.y = initialY + (int) (event.getRawY() - initialTouchY);
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             }
+
+                            if(message != null) {
+                                renderMessage(message.getText().toString());
+                            }
                         }
                         removeChatHead.setVisibility(View.GONE);
 
@@ -243,7 +261,16 @@ public class ChatHeadService extends Service {
                                 menuView.setVisibility(View.GONE);
 
                                 chatHeadParams.x = (int)savedX;
+
+                                if(chatHeadParams.x >= size.x/2) {
+                                    chatHead.setImageResource(R.drawable.private_right);
+                                }
+
                                 chatHeadParams.y = (int)savedY;
+
+                                if(message != null) {
+                                    renderMessage(message.getText().toString());
+                                }
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
                             } else {
                                 // Otherwise open it
@@ -262,12 +289,20 @@ public class ChatHeadService extends Service {
                                 chatHeadParams.y = 10;
                                 chatHead.setImageResource(R.drawable.private_left);
                                 windowManager.updateViewLayout(chatHead, chatHeadParams);
+
+                                if(message != null) {
+                                    renderMessage(message.getText().toString());
+                                }
                             }
                         }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         if(menuOpen) {
                             menuView.setVisibility(View.GONE);
+                        }
+
+                        if(message != null) {
+                            renderMessage(message.getText().toString());
                         }
 
                         chatHeadParams.x = initialX + (int) (event.getRawX() - (initialTouchX + chatHead.getWidth()/2));
@@ -287,34 +322,33 @@ public class ChatHeadService extends Service {
     }
 
     public void renderMessage(final String msg) {
-        history += msg + "\n";
-        penguinText.setText(history);
+        if(!msg.equalsIgnoreCase(message.getText().toString())) {
+            history += msg + "\n";
+            penguinText.setText(history);
+            message.setText(msg);
+            message.setMaxWidth((int)(size.x - chatHead.getX()));
+        }
         message.setVisibility(View.VISIBLE);
         message.setAlpha(1.0f);
-        message.setText(msg);
-        message.setMaxWidth((int)(size.x - chatHead.getX()));
         if(chatHeadParams.x <= size.x/2) {
             messageParams.gravity = Gravity.TOP | Gravity.LEFT;
         } else {
             messageParams.gravity = Gravity.TOP | Gravity.RIGHT;
         }
-        message.setTextSize(18);
-        message.setPadding(5, 5, 5, 5);
-        message.setBackgroundColor(Color.parseColor("#2E72E8"));
 
         messageParams.x = 150;  // ChatHead.getWidth()
         messageParams.y = chatHeadParams.y;
         windowManager.updateViewLayout(message, messageParams);
-        message.animate()
-                .alpha(0f)
-                .setDuration(1200)
-                .setStartDelay(3000)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        message.setVisibility(View.GONE);
-                    }
-                });
+//        message.animate()
+//                .alpha(0f)
+//                .setDuration(1200)
+//                .setStartDelay(3000)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        message.setVisibility(View.GONE);
+//                    }
+//                });
     }
 
     @Override
